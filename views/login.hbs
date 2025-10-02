@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign In</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Sign In</h1>
+
+  {{#if error}}
+    <p style="color: red;">⚠️ {{error}}</p>
+  {{/if}}
+
+  <form action="/login" method="POST">
+    <label>Username:</label>
+    <input type="text" name="username" required><br><br>
+
+    <label>Password:</label>
+    <input type="password" name="password" required><br><br>
+
+    <button type="submit">Sign In</button>
+    <span style="margin-left: 10px;">or <a href="/register">Create an Account</a></span>
+
+    <input type="hidden" name="redirect" value="{{redirect}}">
+    <input type="hidden" name="movieId" value="{{movieId}}">
+    <input type="hidden" name="title" value="{{title}}">
+    <input type="hidden" name="poster" value="{{poster}}">
+    <input type="hidden" name="overview" value="{{overview}}">
+
+  </form>
+
+  <!-- TMDb Attribution Logo -->
+  <div class="tmdb-logo-container">
+    <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">
+      <img src="/images/tmdb-logo.svg" alt="TMDb Logo" class="tmdb-logo">
+    </a>
+    <p class="tmdb-caption">
+        This application uses the TMDb API but is not endorsed or certified by TMDb.
+    </p>
+  </div>
+</body>
+</html>

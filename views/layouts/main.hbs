@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Watchlist App</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Top Bar Navigation -->
+  <div style="max-width: 1000px; margin: auto; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      
+      <!-- Left: Home and Admin Panel (if admin) -->
+      <div style="display: flex; gap: 10px;">
+        <a href="/dashboard" class="filled-btn">Home</a>
+        
+        {{#if @root.session.user}}
+          {{#if (eqAdmin @root.session.user.role)}}
+            <a href="/admin" class="filled-btn">Admin Panel</a>
+          {{/if}}
+        {{/if}}
+      </div>
+
+      <!-- Right: Auth Status -->
+      <div style="display: flex; align-items: center; gap: 10px;">
+        {{#if @root.session.user}}
+          <span>Welcome, {{@root.session.user.username}}</span>
+          <form action="/logout" method="POST">
+            <button class="filled-btn">Logout</button>
+          </form>
+        {{else}}
+          <a href="/login" class="filled-btn">Sign In</a>
+          <a href="/register" class="filled-btn">Create an Account</a>
+        {{/if}}
+      </div>
+    </div>
+
+    {{{body}}}
+  </div>
+</body>
+</html>

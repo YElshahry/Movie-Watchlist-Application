@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Watchlist Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body style="max-width: 1000px; margin: auto; padding: 20px;">
+  <h1>🎬 Movie Watchlist Dashboard</h1>
+
+  {{#if error}}
+    <p style="color: red;">{{error}}</p>
+  {{/if}}
+
+  <!-- Search Form -->
+  <form action="/search" method="POST">
+    <input type="text" name="query" placeholder="Search for a movie..." required>
+    <button type="submit">Search</button>
+  </form>
+
+  <!-- Search Results -->
+  {{#if movies}}
+    <h2>Search Results:</h2>
+    <div class="search-results">
+      {{#each movies}}
+        <div class="movie-card" style="text-align: center;">
+          <a href="/movie/{{this.id}}">
+            <img src="https://image.tmdb.org/t/p/w200{{this.poster_path}}" alt="{{this.title}}">
+          </a>
+          <h3 style="margin: 10px 0 0 0;">
+            <a href="/movie/{{this.id}}" style="text-decoration: none; color: #ffffff;">
+              {{this.title}} [{{formatRating this.vote_average}}]
+            </a>
+          </h3>
+        </div>
+      {{/each}}
+    </div>
+
+  {{else}}
+
+    <!-- Watchlist -->
+    <h2 style="margin-top: 40px;">Your Watchlist:</h2>
+
+    {{#if watchlist.length}}
+        <div class="watchlist">
+            {{#each watchlist}}
+                <div class="movie-card">
+                    <a href="/movie/{{this.movie_id}}">
+                        <img src="https://image.tmdb.org/t/p/w200{{this.poster_path}}" alt="{{this.movie_title}}">
+                    </a>
+                    <h3>
+                        <a href="/movie/{{this.movie_id}}" style="text-decoration: none; color: #ffffff;">
+                            {{this.movie_title}} [{{formatRating this.vote_average}}]
+                        </a>
+                    </h3>
+                    <form action="/remove" method="POST" style="margin-top: 8px;">
+                        <input type="hidden" name="id" value="{{this.id}}">
+                        <button type="submit">Remove from Watchlist</button>
+                    </form>
+                </div>
+            {{/each}}
+        </div>
+    {{else}}
+        <p>No movies in your watchlist yet.</p>
+    {{/if}}
+
+    <!-- Browse Movies -->
+    <h2 style="margin-top: 40px;">Browse:</h2>
+
+    <!-- Sort Options -->
+    <div style="margin-top: 10px;">
+      <form id="sort-form" method="GET" action="/dashboard" style="margin-top: 20px;">
+        <label for="sort">Sort by:</label>
+        <select name="sort" id="sort" onchange="document.getElementById('sort-form').submit()">
+          <option value="" {{#ifEquals sort ""}}selected{{/ifEquals}}>Default</option>
+          <option value="title" {{#ifEquals sort "title"}}selected{{/ifEquals}}>Title (A–Z)</option>
+          <option value="rating" {{#ifEquals sort "rating"}}selected{{/ifEquals}}>Rating (High–Low)</option>
+          <option value="year" {{#ifEquals sort "year"}}selected{{/ifEquals}}>Release Year (New–Old)</option>
+        </select>
+      </form>
+    </div>
+
+    {{#if browse.length}}
+      <div id="browse-container" class="browse-grid">
+        {{#each browse}}
+          <div class="movie-card" style="text-align: center;">
+            <a href="/movie/{{this.id}}">
+              <img src="https://image.tmdb.org/t/p/w200{{this.poster_path}}" alt="{{this.title}}">
+            </a>
+            <h3 style="margin: 10px 0 0 0;">
+              <a href="/movie/{{this.id}}" style="text-decoration: none; color: #ffffff;">
+                {{this.title}} [{{formatRating this.vote_average}}]
+              </a>
+            </h3>
+          </div>
+        {{/each}}
+      </div>
+
+      <!-- View More Button -->
+      <div style="text-align: center; margin-top: 20px;">
+        <button id="load-more-btn" data-page="{{nextPage}}">View More</button>
+      </div>
+
+      <script>
+        document.getElementById('load-more-btn')?.addEventListener('click', async function () {
+          const button = this
+          const page = button.dataset.page
+          const sort = document.getElementById('sort')?.value || ''
+
+          try {
+            const res = await fetch(`/browse/page/${page}?sort=${encodeURIComponent(sort)}`)
+            const movies = await res.json()
+
+            if (movies.length > 0) {
+              const container = document.getElementById('browse-container')
+              movies.forEach(movie => {
+                const div = document.createElement('div')
+                div.className = 'movie-card'
+                div.style.textAlign = 'center'
+                div.innerHTML = `
+                  <a href="/movie/${movie.id}">
+                    <img src="https://image.tmdb.org/t/p/w200${movie.poster_path}" alt="${movie.title}" style="border-radius: 8px;">
+                  </a>
+                  <h3 style="margin: 10px 0 0 0;">
+                    <a href="/movie/${movie.id}" style="text-decoration: none; color: #ffffff;">
+                      ${movie.title} [${parseFloat(movie.vote_average).toFixed(1).replace(/\.0$/, '')}/10]
+                    </a>
+                  </h3>
+                `
+                container.appendChild(div)
+              })
+              button.dataset.page = parseInt(page) + 1
+            } else {
+              button.style.display = 'none'
+            }
+          } catch (err) {
+            console.error('Could not load more movies:', err)
+          }
+        })
+      </script>
+    {{else}}
+      <p>Could not load popular movies.</p>
+    {{/if}}
+
+  {{/if}} <!-- End of else (not searching) -->
+
+  <!-- TMDb Attribution Logo -->
+  <div class="tmdb-logo-container">
+    <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">
+      <img src="/images/tmdb-logo.svg" alt="TMDb Logo" class="tmdb-logo">
+    </a>
+    <p class="tmdb-caption">
+      This application uses the TMDb API but is not endorsed or certified by TMDb.
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Home Button -->
+  <div style="position: absolute; top: 10px; left: 10px;">
+    <a href="/dashboard" class="home-btn">🏠 Home</a>
+  </div>
+
+  <!-- Register Page -->
+  <div class="container">
+    <h1>Register</h1>
+
+    <!-- Error Message -->
+    {{#if error}}
+      <p class="error-text">{{error}}</p>
+    {{/if}}
+
+    <!-- Registration Form -->
+    <form action="/register" method="POST" class="form">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Create an Account</button>
+    </form>
+
+    <p class="small-text">Already have an account? <a href="/login">Sign in here</a>.</p>
+  </div>
+  
+  <!-- TMDb Attribution Logo -->
+  <div class="tmdb-logo-container">
+    <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">
+      <img src="/images/tmdb-logo.svg" alt="TMDb Logo" class="tmdb-logo">
+    </a>
+    <p class="tmdb-caption">
+        This application uses the TMDb API but is not endorsed or certified by TMDb.
+    </p>
+  </div>
+</body>
+</html>

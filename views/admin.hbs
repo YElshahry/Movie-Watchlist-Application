@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <!-- Title -->
+    <h1><span class="icon">👤</span> Admin Panel</h1>
+
+    <!-- Admins Section -->
+    <h2>Admins</h2>
+    <ul class="user-list">
+      {{#each admins}}
+        <li><strong>{{this.username}}</strong> (Admin)</li>
+      {{/each}}
+    </ul>
+
+    <!-- Guests Section -->
+    <h2>Guests</h2>
+    <ul class="user-list">
+      {{#each guests}}
+        <li style="margin-bottom: 12px;">
+          <strong>{{this.username}}</strong>
+
+          <form action="/admin/remove-user" method="POST" class="inline-form">
+            <input type="hidden" name="id" value="{{this.id}}">
+            <button class="filled-btn">Remove</button>
+          </form>
+
+          <form action="/admin/promote" method="POST" class="inline-form">
+            <input type="hidden" name="id" value="{{this.id}}">
+            <button class="filled-btn">Promote to Admin</button>
+          </form>
+
+          <a href="/admin/user-settings/{{this.id}}" class="manage-link">Manage User</a>
+        </li>
+      {{/each}}
+    </ul>
+
+    <!-- Add New User -->
+    <p>
+      <a href="/admin/create" class="add-user-link">➕ Add New User</a>
+    </p>
+  </div>
+
+  <!-- TMDb Attribution -->
+  <div class="tmdb-logo-container">
+    <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">
+      <img src="/images/tmdb-logo.svg" alt="TMDb Logo" class="tmdb-logo">
+    </a>
+    <p class="tmdb-caption">
+      This application uses the TMDb API but is not endorsed or certified by TMDb.
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage User</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- User Settings Page -->
+  <div class="container">
+    <!-- Back to Admin Link -->
+    <a href="/admin" class="home-link">🏠 Back to Admin Panel</a>
+
+    <!-- User Title -->
+    <h1>🔧 Manage User: {{user.username}}</h1>
+
+    <!-- Error Message -->
+    {{#if error}}
+      <p class="error">⚠️ {{error}}</p>
+    {{/if}}
+
+    <!-- Update User Form -->
+    <form action="/admin/user-settings/{{user.id}}" method="POST">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" value="{{user.username}}" required>
+
+      <label for="password">Password:</label>
+      <input type="text" id="password" name="password" value="{{user.password}}" required>
+
+      <button type="submit">Save Changes</button>
+    </form>
+
+    <!-- Delete User Form -->
+    <form action="/admin/remove-user" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?')">
+      <input type="hidden" name="id" value="{{user.id}}">
+      <button type="submit" class="danger">Delete User</button>
+    </form>
+
+    <!-- Promote to Admin Button -->
+    {{#unless (eq user.role 'admin')}}
+      <form action="/admin/promote" method="POST">
+        <input type="hidden" name="id" value="{{user.id}}">
+        <button type="submit">Promote to Admin</button>
+      </form>
+    {{/unless}}
+
+    <!-- User Watchlist Section -->
+    {{#if watchlist.length}}
+      <h2 style="margin-top: 40px;">User's Watchlist:</h2>
+      <ul style="list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 20px;">
+        {{#each watchlist}}
+          <li style="text-align: center;">
+            <a href="/movie/{{this.movie_id}}">
+              <img src="https://image.tmdb.org/t/p/w200{{this.poster_path}}" alt="{{this.movie_title}}" style="border-radius: 6px;">
+            </a>
+            <h3 style="margin: 5px 0;">
+              <a href="/movie/{{this.movie_id}}" style="text-decoration: none; color: black;">
+                {{this.movie_title}}
+              </a>
+            </h3>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p style="margin-top: 30px;">This user has no movies in their watchlist.</p>
+    {{/if}}
+  </div>
+
+  <!-- TMDb Attribution Logo -->
+  <div class="tmdb-logo-container">
+    <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">
+      <img src="/images/tmdb-logo.svg" alt="TMDb Logo" class="tmdb-logo">
+    </a>
+    <p class="tmdb-caption">
+        This application uses the TMDb API but is not endorsed or certified by TMDb.
+    </p>
+  </div>
+</body>
+</html>

@@ -1,2 +1,0 @@
-# Movie Watchlist Application
-

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create New Account</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Create a New Account</h1>
+
+  {{#if error}}
+    <p style="color: red;"> {{error}}</p>
+  {{/if}}
+
+  <form action="/admin/create" method="POST">
+    <label>Username:</label>
+    <input type="text" name="username" required><br><br>
+
+    <label>Password:</label>
+    <input type="password" name="password" required><br><br>
+
+    <label>Role:</label>
+    <select name="role">
+      <option value="guest">Guest</option>
+      <option value="admin">Admin</option>
+    </select><br><br>
+
+    <button type="submit">Create Account</button>
+  </form>
+</body>
+</html>
