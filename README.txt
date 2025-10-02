@@ -1,12 +1,11 @@
 Name: Yousuf Elshahry
-Student I.D.: 101201262
 
 
 Affidavit:
 
 I attest to be being the sole author of this submitted work and any code borrowed from other sources has been identified by comments placed in my submitted code.
 
-Yousuf Elshahry, 101201262
+Yousuf Elshahry
 
 
 Install Instructions:
